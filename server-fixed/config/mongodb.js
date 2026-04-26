@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
-  mongoose.connection.on("connected", () => {
-    console.log("Database connected ✅");
+  mongoose.connect(process.env.MONGODB_URI, {
+    tls: true,
+    tlsAllowInvalidCertificates: true,
   });
   await mongoose.connect(`${process.env.MONGODB_URL}mern-auth`);
 };

@@ -15,7 +15,8 @@ connectDB();
 // ✅ Dynamic CORS — works in both dev and production
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://linqgram.vercel.app",
+
+  "https://linqgram-comreal-1.onrender.com/",
 ];
 
 app.use(
@@ -28,7 +29,7 @@ app.use(
       }
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -38,7 +39,10 @@ app.use(cookieParser());
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: { success: false, message: "Too many requests. Please try again later." },
+  message: {
+    success: false,
+    message: "Too many requests. Please try again later.",
+  },
 });
 app.use(globalLimiter);
 
@@ -46,7 +50,10 @@ app.use(globalLimiter);
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
-  message: { success: false, message: "Too many auth attempts. Please try again later." },
+  message: {
+    success: false,
+    message: "Too many auth attempts. Please try again later.",
+  },
 });
 app.use("/api/auth", authLimiter);
 
