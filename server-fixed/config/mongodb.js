@@ -1,11 +1,10 @@
 import mongoose from "mongoose";
-
+// ✅ Fix karo — sirf yeh rakho
 const connectDB = async () => {
-  mongoose.connect(process.env.MONGODB_URI, {
+  await mongoose.connect(`${process.env.MONGODB_URL}mern-auth`, {
     tls: true,
     tlsAllowInvalidCertificates: true,
   });
-  await mongoose.connect(`${process.env.MONGODB_URL}mern-auth`);
 };
 
 export default connectDB;
