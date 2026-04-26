@@ -12,24 +12,14 @@ const port = process.env.PORT || 4000;
 
 connectDB();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://linqgram-comreal-1.onrender.com", // ✅ no trailing slash
-];
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // ✅ preflight fix
+// ✅ Allow all origins temporarily to fix CORS
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  }),
+);
+app.options("*", cors({ origin: true, credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());
