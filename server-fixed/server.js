@@ -12,30 +12,28 @@ const port = process.env.PORT || 4000;
 
 connectDB();
 
-// ✅ Dynamic CORS — works in both dev and production
 const allowedOrigins = [
   "http://localhost:5173",
-
-  "https://linqgram-comreal-1.onrender.com/",
+  "https://linqgram-comreal-1.onrender.com", // ✅ no trailing slash
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  }),
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // ✅ preflight fix
 
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ Global rate limiter — max 100 requests per 15 minutes per IP
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -46,7 +44,6 @@ const globalLimiter = rateLimit({
 });
 app.use(globalLimiter);
 
-// ✅ Stricter limiter for auth routes (login, register, OTP)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -57,7 +54,6 @@ const authLimiter = rateLimit({
 });
 app.use("/api/auth", authLimiter);
 
-// API endpoints
 app.get("/", (req, res) => {
   res.send("Server is running fine ✅");
 });
